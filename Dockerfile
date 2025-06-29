@@ -1,3 +1,6 @@
+# this file is basically the recipe to create the image
+# after the : is the tag (version of the program you are going to get)
+
 # Use the official Python image from the Python Docker Hub repository as the base image
 FROM python:3.12-slim-bullseye
 
@@ -10,6 +13,7 @@ WORKDIR /app
 COPY requirements.txt ./
 
 # Install the Python packages specified in requirements.txt
+# basically the RUN command is how you save things on the disk
 RUN useradd -m myuser && pip install --no-cache-dir -r requirements.txt && \
     mkdir logs qr_codes && chown myuser:myuser logs qr_codes
 # Before copying the application code, create the logs and qr_codes directories
@@ -23,6 +27,7 @@ USER myuser
 
 # Use the Python interpreter as the entrypoint and the script as the first argument
 # This allows additional command-line arguments to be passed to the script via the docker run command
+# ENTRYPOINT is the name of the program we are going to run
 ENTRYPOINT ["python", "main.py"]
 # this sets a default argument, its also set in the program but this just illustrates how to use cmd and override it from the terminal
-CMD ["--url","http://github.com/kaw393939"]
+CMD ["--url","http://github.com/Jeffches15"]
