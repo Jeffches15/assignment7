@@ -30,3 +30,21 @@ jobs:
       - name: Run tests with pytest and enforce 90% coverage
         run: |
           pytest --cov=app
+
+      - name: Log in to DockerHub (optional, if pushing)
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t test_qr_codemaker:latest .
+
+      # Optional: Push to DockerHub (only on main push)
+      - name: Push Docker image
+        if: github.event_name == 'push'
+        run: |
+          docker tag test_qr_codemaker:latest jeffches15/test_qr_codemaker:latest
+          docker push jeffches15/test_qr_codemaker:latest
